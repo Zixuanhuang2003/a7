@@ -1,12 +1,17 @@
 package diver;
 
 import game.*;
+import graph.ShortestPaths;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /** This is the place for your implementation of the {@code SewerDiver}.
  */
 public class McDiver implements SewerDiver {
 
+    Map<Long, Boolean> visited_nodes = new HashMap<>();
 
     /** See {@code SewerDriver} for specification. */
     @Override
@@ -22,6 +27,7 @@ public class McDiver implements SewerDiver {
         // If you don't succeed, you can always use the first one.
         //
         // Use this same process on the second method, scram.
+        dfs_search(state);
     }
 
     /** See {@code SewerDriver} for specification. */
@@ -30,6 +36,35 @@ public class McDiver implements SewerDiver {
         // TODO: Get out of the sewer system before the steps are used up.
         // DO NOT WRITE ALL THE CODE HERE. Instead, write your method elsewhere,
         // with a good specification, and call it from this one.
+        scram_route(state);
+
     }
 
+
+    public void dfs_search(SeekState state){
+        long id = 0;
+        long cur = state.currentLocation();
+        ArrayList<NodeStatus> neighbor_list = new ArrayList<>();
+        visited_nodes.put(cur, true);
+        if (state.distanceToRing()!=0){
+            for(NodeStatus ns : state.neighbors()){
+                id = ns.getId();
+                if(!visited_nodes.containsKey(id)) visited_nodes.put(id, false);
+                neighbor_list.add(ns);
+            }
+            for(NodeStatus node_stat : neighbor_list){
+                if(visited_nodes.get(node_stat.getId())==false) {
+                    state.moveTo(node_stat.getId());
+                    seek(state);
+                    if(state.distanceToRing() == 0) return;
+                    state.moveTo(cur);
+                }
+            }
+        }
+        else return;
+    }
+
+    public void scram_route(ScramState state){
+
+    }
 }
