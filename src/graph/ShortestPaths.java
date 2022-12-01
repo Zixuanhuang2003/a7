@@ -62,11 +62,13 @@ public class ShortestPaths<Vertex, Edge> {
                 if(!distances.containsKey(v)){
                     distances.put(v, length);
                     frontier.add(v, length);
+                    bestEdges.put(v,e);
                 }
                 else {
                     if(length < distances.get(v)){
                         distances.put(v, length);
                         frontier.changePriority(v, length);
+                        bestEdges.put(v,e);
                     }
                 }
             }
@@ -103,6 +105,7 @@ public class ShortestPaths<Vertex, Edge> {
             throw new Error("best distances not computed yet");
         });
         Vertex v = target;
+
         while (true) {
             Edge e = bestEdges.get(v);
             if (e == null) break; // must be the source vertex

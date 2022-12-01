@@ -3,7 +3,10 @@ package diver;
 import game.*;
 import graph.ShortestPaths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 
 
@@ -65,6 +68,19 @@ public class McDiver implements SewerDiver {
     }
 
     public void scram_route(ScramState state){
-
+        List<Node> nodes = new ArrayList<>();
+        for(Node n : state.allNodes()){
+            nodes.add(n);
+        }
+        Maze escape_route = new Maze(Collections.unmodifiableSet(new HashSet<>(nodes)));
+        ShortestPaths<Node, Edge> dijkstra = new ShortestPaths<>(escape_route);
+        dijkstra.singleSourceDistances(state.currentNode());
+        List<Edge> route = dijkstra.bestPath(state.exit());
+        System.out.println("current at :" + state.currentNode().getId());
+        System.out.println("route :" + route.size());
+        for(Edge e : route){
+            System.out.println(e.destination().getId());
+            state.moveTo(e.destination());
+        }
     }
 }
