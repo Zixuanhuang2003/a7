@@ -76,10 +76,7 @@ public class McDiver implements SewerDiver {
         ShortestPaths<Node, Edge> dijkstra = new ShortestPaths<>(escape_route);
         dijkstra.singleSourceDistances(state.currentNode());
         List<Edge> route = dijkstra.bestPath(state.exit());
-        System.out.println("current at :" + state.currentNode().getId());
-        System.out.println("route :" + route.size());
         for(Edge e : route){
-            System.out.println(e.destination().getId());
             state.moveTo(e.destination());
         }
     }
