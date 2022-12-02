@@ -69,5 +69,6 @@ public class McDiver implements SewerDiver {
         for(Edge e : route){
             state.moveTo(e.destination());
         }
+        return;
     }
 }
