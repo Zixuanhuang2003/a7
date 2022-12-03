@@ -18,8 +18,18 @@ public class GUIControl {
     /** Wait until the GUI animation, if any, is complete. */
     public static void waitForAnimation(Maybe<GUI> gui) {
         // TODO: Avoid inefficient spinning while waiting for GUI
+        Object mutex = new Object();
         gui.thenDo(g -> {
-           while (g.isAnimating()) {}
+            synchronized (g){
+                while(g.isAnimating()) {
+                    try {
+                        g.wait();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+//           while (g.isAnimating()) {}
         });
     }
 }

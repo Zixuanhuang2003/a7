@@ -59,6 +59,7 @@ public class McDiver implements SewerDiver {
     public void scram_route(ScramState state){
         List<Node> nodes = new ArrayList<>();
         for(Node n : state.allNodes()){
+//            System.out.println(n.);
             nodes.add(n);
         }
         Maze escape_route = new Maze(Collections.unmodifiableSet(new HashSet<>(nodes)));
@@ -69,6 +70,8 @@ public class McDiver implements SewerDiver {
         for(Edge e : route){
             state.moveTo(e.destination());
         }
+        //
+
         return;
     }
 }
