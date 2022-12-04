@@ -79,6 +79,7 @@ public class ShortestPaths<Vertex, Edge> {
         this.distances = Maybe.some(distances);
     }
 
+
     /** Returns: the distance from the source vertex to the given vertex.
      *  Checks: distances have been computed from a source vertex,
      *    and vertex v is reachable from that vertex.

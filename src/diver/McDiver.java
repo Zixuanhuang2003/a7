@@ -18,6 +18,8 @@ import java.util.Map;
 public class McDiver implements SewerDiver {
 
     Map<Long, Boolean> visited_nodes = new HashMap<>();
+    List<Node> nodes = new ArrayList<>();
+    List<Node> coinlist = new ArrayList<>();
 
     /** See {@code SewerDriver} for specification. */
     @Override
@@ -28,7 +30,13 @@ public class McDiver implements SewerDiver {
     /** See {@code SewerDriver} for specification. */
     @Override
     public void scram(ScramState state) {
-        scram_route(state);
+        nodes = new ArrayList<>();
+        for(Node n : state.allNodes()){
+            nodes.add(n);
+        }
+        while(state.currentNode()!=state.exit()){
+            find_coins_route(state);
+        }
     }
 
 
@@ -56,22 +64,55 @@ public class McDiver implements SewerDiver {
         else return;
     }
 
-    public void scram_route(ScramState state){
-        List<Node> nodes = new ArrayList<>();
-        for(Node n : state.allNodes()){
-//            System.out.println(n.);
-            nodes.add(n);
-        }
+    public void Shortest_escape_route(ScramState state){
         Maze escape_route = new Maze(Collections.unmodifiableSet(new HashSet<>(nodes)));
-        //shorttest path
         ShortestPaths<Node, Edge> dijkstra = new ShortestPaths<>(escape_route);
         dijkstra.singleSourceDistances(state.currentNode());
         List<Edge> route = dijkstra.bestPath(state.exit());
         for(Edge e : route){
             state.moveTo(e.destination());
         }
-        //
-
         return;
     }
+
+    public void find_coins_route(ScramState state){
+        gen_coin_list(state);
+        Maze escape_route = new Maze(Collections.unmodifiableSet(new HashSet<>(nodes)));
+        ShortestPaths<Node, Edge> dijkstra = new ShortestPaths<>(escape_route);
+        if(state.currentNode()==state.exit())return;
+        if(coinlist.size() == 0){
+            Shortest_escape_route(state);
+            return;
+        }
+        Node default_coin = coinlist.get(0);
+        dijkstra.singleSourceDistances(state.currentNode());
+        List<Edge> route = dijkstra.bestPath(default_coin);
+        Double route_distance = dijkstra.getDistance(default_coin);
+        for(Node n : coinlist){
+            List<Edge> other_route = dijkstra.bestPath(n);
+            Double other_route_distance = dijkstra.getDistance(n);
+            if(other_route_distance < route_distance){
+                route = other_route;
+                default_coin = n;
+                route_distance = other_route_distance;
+            }
+        }
+        dijkstra.singleSourceDistances(default_coin);
+        Double shortest_path_to_exit_distance = dijkstra.getDistance(state.exit());
+        if(route_distance + shortest_path_to_exit_distance >= state.stepsToGo()){
+            dijkstra.singleSourceDistances(state.currentNode());
+            route = dijkstra.bestPath(state.exit());
+        }
+        for(Edge e : route){
+            state.moveTo(e.destination());
+        }
+    }
+
+    public void gen_coin_list(ScramState state){
+        coinlist = new ArrayList<>();
+        for(Node n : state.allNodes()){
+            if(n.getTile().coins() > 0) coinlist.add(n);
+        }
+    }
+
 }
