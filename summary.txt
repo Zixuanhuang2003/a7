@@ -1,16 +1,16 @@
-(Fill out this file with brief answers.)
-
 Name(s) and NetID(s) of group members:
-
+Names: Nick Huang, Yen-Hsing Li
+NetIDs: zh428, yl2924
 Time spent on the assignment, in hours:
-
+15 hours in total.
 Implementation strategy:
     (describe how you went about implementing the assignment and how the work was divided between the partners.)
-
+We followed the handout instructions and implemented it step by step together, we reviewed lectures about concurrency and graph before doing this assignment.
 Testing strategy:
     (how did you perform testing and design test cases to achieve coverage?)
-
+We thought about and listed possible problems on paper, then we wrote about the testing strategy.
 Known problems:
     (are there any things that do not work?)
-
+No.
 Comments on the assignment:
+This assignment is interesting.
